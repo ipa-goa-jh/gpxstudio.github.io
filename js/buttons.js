@@ -1,6 +1,7 @@
 import Total from './total.js';
 import Slider from './slider.js';
 import Google from './google.js';
+import Tools from './tools.js';
 
 export default class Buttons {
     constructor() {
@@ -48,6 +49,8 @@ export default class Buttons {
         }
 
         // BUTTONS
+        this.tool_check = document.getElementById("tool-check");
+        this.tool_poi = document.getElementById("tool-poi");
         this.input = document.getElementById("input-file");
         this.load = document.getElementById("load");
         this.load2 = document.getElementById("load2");
@@ -1235,6 +1238,14 @@ export default class Buttons {
                 buttons.export_window.show();
             }
         });
+        this.tool_check.addEventListener("click", async function () {
+            const additionalData = total.getAverageAdditionalData();
+            buttons.tools.checkRoute(total);
+        });
+        this.tool_poi.addEventListener("click", async function () {
+            const additionalData = total.getAverageAdditionalData();
+            buttons.tools.generatePOI(total);
+        });
         this.export2.addEventListener("click", async function () {
             const mergeAll = buttons.merge.checked;
             const time = buttons.include_time.checked;
@@ -2101,6 +2112,7 @@ export default class Buttons {
             }
         });
         this.google = new Google(this);
+        this.tools = new Tools(this);
     }
 
     focusTabElement(tab) {
