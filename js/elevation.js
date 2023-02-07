@@ -1,9 +1,11 @@
 const surface_key = document.getElementById('surface-text').innerText;
 const slope_key = document.getElementById('slope-text').innerText;
+const blocked_key = document.getElementById('blocked-text').innerText;
 
 const mappings = {};
 mappings[surface_key] = window.surface_mapping;
 mappings[slope_key] = window.slope_mapping;
+mappings[blocked_key] = window.blocked_mapping;
 
 function slope_to_interval(slope) {
     for (const [key, value] of Object.entries(mappings[slope_key])) {
@@ -20,7 +22,8 @@ L.Control.Heightgraph.include({
     originalResetDrag: L.Control.Heightgraph.prototype._resetDrag,
     addFeature: function(featureCollection, points, attributeType) {
         if (!this._mappings[surface_key].hasOwnProperty(attributeType) &&
-            !this._mappings[slope_key].hasOwnProperty(attributeType)) attributeType = 'missing';
+            !this._mappings[slope_key].hasOwnProperty(attributeType) &&
+            !this._mappings[blocked_key].hasOwnProperty(attributeType)) attributeType = 'missing';
         featureCollection.features.push({
             "type": "Feature",
             "geometry": {
@@ -41,7 +44,7 @@ L.Control.Heightgraph.include({
             return;
         }
 
-        this._originalData = [[],[]];
+        this._originalData = [[],[],[]];
         const featureCollections = [{
             "type": "FeatureCollection",
             "features": [],
@@ -56,10 +59,18 @@ L.Control.Heightgraph.include({
                 "records": 0,
                 "summary": slope_key
             }
+        },{
+            "type": "FeatureCollection",
+            "features": [],
+            "properties": {
+                "records": 0,
+                "summary": blocked_key
+            }
         }];
 
         for (var i=0; i<data.length; i++) {
             var surfaceTypePoints = [], steepnessTypePoints = [], surfaceType = null, steepnessType = null;
+            var blockedTypePoints = [], blockedType = null;
 
             for (var j=0; j<data[i].length; j++) {
                 const latlng = data[i][j];
@@ -78,6 +89,22 @@ L.Control.Heightgraph.include({
                     this._originalData[0].push(this._originalData[0][this._originalData[0].length-1]);
                     this._originalData[0].push(latlng);
                     surfaceType = latlng.meta.surface;
+                }
+
+                // blocked
+                if (blockedType == null) {
+                    blockedType = latlng.meta.blocked;
+                    blockedTypePoints.push([latlng.lng, latlng.lat, latlng.meta.ele]);
+                    this._originalData[2].push(latlng);
+                } else if (blockedType == latlng.meta.blocked) {
+                    blockedTypePoints.push([latlng.lng, latlng.lat, latlng.meta.ele]);
+                    this._originalData[2].push(latlng);
+                } else {
+                    this.addFeature(featureCollections[2], blockedTypePoints, blockedType);
+                    blockedTypePoints = [blockedTypePoints[blockedTypePoints.length-1], [latlng.lng, latlng.lat, latlng.meta.ele]];
+                    this._originalData[2].push(this._originalData[2][this._originalData[2].length-1]);
+                    this._originalData[2].push(latlng);
+                    blockedType = latlng.meta.blocked;
                 }
 
                 const steepness = slope_to_interval(latlng.meta.slope);
@@ -100,6 +127,7 @@ L.Control.Heightgraph.include({
 
             if (surfaceTypePoints.length > 0) this.addFeature(featureCollections[0], surfaceTypePoints, surfaceType);
             if (steepnessTypePoints.length > 0) this.addFeature(featureCollections[1], steepnessTypePoints, steepnessType);
+            if (blockedTypePoints.length > 0) this.addFeature(featureCollections[2], blockedTypePoints, blockedType);
         }
 
         this.originalAddData(featureCollections);
@@ -152,6 +180,22 @@ L.Control.Heightgraph.include({
             "properties": {
                 "records": 1,
                 "summary": slope_key
+            }
+        },{
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [[0,0,0]]
+                },
+                "properties": {
+                    "attributeType": "missing"
+                }
+            }],
+            "properties": {
+                "records": 1,
+                "summary": blocked_key
             }
         }]);
         this._removeSliderCircles();

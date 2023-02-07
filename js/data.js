@@ -30,6 +30,12 @@ window.surface_mapping = {
     'grass_paver': { text: document.getElementById('grass-paver-text').innerText, color: '#61b55c' }
 };
 
+window.blocked_mapping = {
+    'missing': { text: document.getElementById('missing-text').innerText, color: '#d1d1d1' },
+    '0': { text: document.getElementById('paved-text').innerText, color: '#8c8c8c' },
+    '1': { text: document.getElementById('unpaved-text').innerText, color: '#6b443a' }
+};
+
 window.slope_mapping = {
     '-6': { text: '<-25%', color: '#046307', min: -Infinity, max: -25.5 },
     '-5': { text: '[-25,-17]%', color: '#028306', min: -25.5, max: -16.5 },

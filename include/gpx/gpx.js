@@ -585,7 +585,7 @@ L.GPX = L.FeatureGroup.extend({
       var _, ll = new L.LatLng(
         el[i].getAttribute('lat'),
         el[i].getAttribute('lon'));
-      ll.meta = { time: null, original_time: false, ele: null, hr: null, cad: null, atemp: null, surface: "missing" };
+      ll.meta = { time: null, original_time: false, ele: null, hr: null, cad: null, atemp: null, surface: "missing", blocked: "missing" };
 
       _ = el[i].getElementsByTagName('time');
       if (_.length > 0) {
@@ -639,6 +639,13 @@ L.GPX = L.FeatureGroup.extend({
       if (_.length > 0) {
         if (window.surface_mapping.hasOwnProperty(_[0].textContent)) {
           ll.meta.surface = _[0].textContent;
+        }
+      }
+
+      _ = el[i].getElementsByTagNameNS('*', 'blocked');
+      if (_.length > 0) {
+        if (window.blocked_mapping.hasOwnProperty(_[0].textContent)) {
+          ll.meta.blocked = _[0].textContent;
         }
       }
 
