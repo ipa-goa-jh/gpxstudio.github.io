@@ -1,11 +1,11 @@
 export default class Tools {
 
     constructor(buttons) {
-        this.urlCheck = 'ws://localhost:6789';
-        this.urlPOI = 'ws://localhost:6790';
-        this.buttons = buttons;
-
-        const _this = this;
+      this.urlCheck = new URL(buttons.blockade_url, location.href);
+      this.urlCheck.protocol = 'wss';
+      this.urlPOI = new URL(buttons.poi_url, location.href);
+      this.urlPOI.protocol = 'wss';
+      this.buttons = buttons;
     }
 
     checkRoute(total) {
