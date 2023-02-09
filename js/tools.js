@@ -2,9 +2,9 @@ export default class Tools {
 
     constructor(buttons) {
       this.urlCheck = new URL(buttons.blockade_url, location.href);
-      this.urlCheck.protocol = 'https';
+      this.urlCheck.protocol = 'wss';
       this.urlPOI = new URL(buttons.poi_url, location.href);
-      this.urlPOI.protocol = 'https';
+      this.urlPOI.protocol = 'wss';
       this.buttons = buttons;
     }
 
