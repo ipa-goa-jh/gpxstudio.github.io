@@ -32,6 +32,7 @@ export default class Tools {
         };
         
         socket.onmessage = function(event) {
+            if (event.data == ' ') return;
             var title = titles[title_index];
             var callback = function (trace) {};
             total.addTrace(event.data, title, callback);
@@ -76,6 +77,7 @@ export default class Tools {
         };
         
         socket.onmessage = function(event) {
+            if (event.data == ' ') return;
             var callback = function (trace) {};
             total.addTrace(event.data, title, callback);
         };
