@@ -386,7 +386,7 @@ export default class Buttons {
                         _this.mapbox_style = urlParams.get('mapbox-style');
                         _this.custom_style = true;
                     }
-                } else if (window.location.hostname != "localhost") _this.mapbox_token = keys.mapbox;
+                } else if (window.location.hostname != "localhost") _this.mapbox_token = keys.mapbox_dev;
                 else _this.mapbox_token = keys.mapbox_dev;
 
                 // TILES
