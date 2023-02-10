@@ -18,6 +18,7 @@ export default class Tools {
         const cad = false;
         const power = false;
         const surface = false;
+        const element = this.buttons.tool_check;
 
         var trace = total.traces[total.focusOn];
         const titles = [trace.name + ' Annotated', trace.name + ' Blocked', trace.name + ' Blockades'];
@@ -25,6 +26,7 @@ export default class Tools {
         var title_index = 0;
 
         socket.onopen = function(e) {
+            element.classList.add("in-progress");
             var output = total.outputGPX(mergeAll, time, hr, atemp, cad, power, surface, total.focusOn);
             socket.send(output[0].text);
         };
@@ -37,6 +39,7 @@ export default class Tools {
         };
         
         socket.onclose = function(event) {
+          element.classList.remove("in-progress");
           if (event.wasClean && title_index==3) {
           } else {
             // e.g. server process killed or network down
@@ -46,6 +49,7 @@ export default class Tools {
         };
         
         socket.onerror = function(error) {
+          element.classList.remove("in-progress");
           alert(`[error]`);
         };
     }
@@ -60,11 +64,13 @@ export default class Tools {
         const cad = false;
         const power = false;
         const surface = false;
+        const element = this.buttons.tool_poi;
 
         var trace = total.traces[total.focusOn];
         const title = trace.name + ' with POIs';
 
         socket.onopen = function(e) {
+            element.classList.add("in-progress");
             var output = total.outputGPX(mergeAll, time, hr, atemp, cad, power, surface, total.focusOn);
             socket.send(output[0].text);
         };
@@ -75,6 +81,7 @@ export default class Tools {
         };
         
         socket.onclose = function(event) {
+          element.classList.remove("in-progress");
           if (event.wasClean) {
           } else {
             // e.g. server process killed or network down
@@ -84,6 +91,7 @@ export default class Tools {
         };
         
         socket.onerror = function(error) {
+          element.classList.remove("in-progress");
           alert(`[error]`);
         };
     }

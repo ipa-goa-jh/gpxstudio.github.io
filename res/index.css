@@ -131,6 +131,10 @@ html, body {
     cursor: pointer;
 }
 
+.in-progress {
+    background-color: #fae4b9;
+}
+
 .panels {
     display: inline-block;
     padding: 4px 10px;
