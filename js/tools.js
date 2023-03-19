@@ -21,7 +21,7 @@ export default class Tools {
         const element = this.buttons.tool_check;
 
         var trace = total.traces[total.focusOn];
-        const titles = [trace.name + ' Annotated', trace.name + ' Blocked', trace.name + ' Blockades'];
+        const titles = [trace.name + ' Annotated', trace.name + ' Blocked', trace.name + ' Blockades', trace.name + ' Tunnels'];
 
         var title_index = 0;
 
@@ -41,7 +41,7 @@ export default class Tools {
         
         socket.onclose = function(event) {
           element.classList.remove("in-progress");
-          if (event.wasClean && title_index==3) {
+          if (event.wasClean && title_index==4) {
           } else {
             // e.g. server process killed or network down
             // event.code is usually 1006 in this case
